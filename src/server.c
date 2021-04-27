@@ -1,9 +1,12 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/un.h>
 #include <unistd.h>
 #include <string.h>
+
+const uint BUF_SIZE = 1024;
 
 int main(void)
 {
@@ -21,15 +24,14 @@ int main(void)
 
   listen(server_sockfd , 5);
   while(1) {
-    char ch ;
-
+    char* ch = (char*)calloc(BUF_SIZE, sizeof(char));
     printf("server waiting\n");
 
     client_sockfd = accept(server_sockfd ,
                     (struct sockaddr *)&client_address , &client_len);
 
-    read(client_sockfd,&ch,1);
-    write(client_sockfd,&ch,1);
+    read(client_sockfd,&ch,BUF_SIZE);
+    write(client_sockfd,&ch,BUF_SIZE);
     close(client_sockfd);
   }
 }

@@ -6,13 +6,16 @@
 #include <unistd.h>
 #include <string.h>
 
+const uint BUF_SIZE = 1024;
+
 int main(void)
 {
   int sockfd ;
   int len ;
   struct sockaddr_un address ;
   int result ;
-  char ch = 'O' ;
+  char* ch = "hogefugapiyo";
+  char* recvCh = (char*)calloc(BUF_SIZE, sizeof(char));
 
   sockfd = socket(AF_UNIX,SOCK_STREAM,0);
 
@@ -27,9 +30,9 @@ int main(void)
     exit(1);
   }
 
-  write(sockfd,&ch,1);
-  read(sockfd,&ch,1);
-  printf("char from server = %c \n",ch);
+  write(sockfd,&ch,BUF_SIZE);
+  read(sockfd,&recvCh, BUF_SIZE);
+  printf("char from server = %s \n",recvCh);
   close(sockfd);
   exit(0);
 }
