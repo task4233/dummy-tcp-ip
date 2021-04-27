@@ -14,7 +14,7 @@ int main(void)
   int len ;
   struct sockaddr_un address ;
   int result ;
-  char* ch = "hogefugapiyo";
+  char* ch = "hogefugapiyohogefugapiyo\0";
   char* recvCh = (char*)calloc(BUF_SIZE, sizeof(char));
 
   sockfd = socket(AF_UNIX,SOCK_STREAM,0);
