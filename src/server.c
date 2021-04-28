@@ -16,7 +16,7 @@ typedef struct
   uint32_t ttl;
 } LayerDIP;
 
-char* interpretDIPData(char **data)
+char* interpret_DIP_Data(char **data)
 {
   printf("data\n: %s", *data);
 
@@ -58,10 +58,10 @@ int main(void)
     client_sockfd = accept(server_sockfd,
                            (struct sockaddr *)&client_address, &client_len);
 
-    int res = read(client_sockfd, &ch[0], sizeof(ch));
-    ch[res] = '\0';
-    // char* res = interpretDIPData(&ch);
-    printf("[server] ch: %s\n", ch);
+    int read_len = read(client_sockfd, &ch[0], sizeof(ch));
+    ch[read_len] = '\0';
+    char* res = interpret_DIP_Data(&ch);
+    printf("[servr] ch: %s\n", ch);
     write(client_sockfd, &ch[0], BUF_SIZE);
     close(client_sockfd);
   }
