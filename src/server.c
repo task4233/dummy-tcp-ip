@@ -49,19 +49,20 @@ int main(void)
   bind(server_sockfd, (struct sockaddr *)&server_address, server_len);
 
   listen(server_sockfd, 5);
-  while (1)
+  while(1)
   {
     char *ch = (char *)calloc(BUF_SIZE, sizeof(char));
     printf("server waiting\n");
+    printf("%c\n", ch[0]);
 
     client_sockfd = accept(server_sockfd,
                            (struct sockaddr *)&client_address, &client_len);
 
-    read(client_sockfd, &ch, BUF_SIZE);
-    printf("%s\n", ch);
-    char* res = interpretDIPData(&ch);
-
-    write(client_sockfd, &res, BUF_SIZE);
+    int res = read(client_sockfd, &ch[0], sizeof(ch));
+    ch[res] = '\0';
+    // char* res = interpretDIPData(&ch);
+    printf("[server] ch: %s\n", ch);
+    write(client_sockfd, &ch[0], BUF_SIZE);
     close(client_sockfd);
   }
 }

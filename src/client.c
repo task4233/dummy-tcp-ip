@@ -30,8 +30,7 @@ int main(void)
     exit(1);
   }
 
-  write(sockfd,&ch,BUF_SIZE);
-  read(sockfd,&recvCh, BUF_SIZE);
+  write(sockfd,&ch[0],sizeof(ch));
   printf("char from server = %s \n",recvCh);
   close(sockfd);
   exit(0);
