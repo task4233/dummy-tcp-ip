@@ -7,33 +7,9 @@
 #include <unistd.h>
 #include <string.h>
 #include "utils.h"
+#include "dip.h"
 
 const uint BUF_SIZE = 1024;
-
-typedef struct
-{
-  uint32_t type;
-  uint32_t version;
-  uint32_t ttl;
-} LayerDIP;
-
-char* interpret_DIP_Data(char *data)
-{
-  LayerDIP *dip = (LayerDIP*)calloc(1, sizeof(LayerDIP)); 
-  show_hexdump(data);
-
-  memcpy(&dip->type, data, 4);
-  printf("type: %0X\n", dip->type); 
-
-  memcpy(&dip->version, data+4, 4); 
-  printf("version: %0X\n", dip->version);
-
-  memcpy(&dip->ttl, data+8, 4);
-  printf("ttl: %0X\n", dip->ttl);
-
-  free(dip);
-  return data;
-}
 
 int main(void)
 {
@@ -62,7 +38,7 @@ int main(void)
     int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
     char* res = interpret_DIP_Data(&ch[0]);
      
-    show_hexdump(ch); 
+    show_hexdump(ch, 37); 
     write(client_sockfd, &ch[0], BUF_SIZE);
     close(client_sockfd);
   }
