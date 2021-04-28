@@ -13,14 +13,6 @@ typedef struct
   unsigned char digest[16];
 } DTCP;
 
-void calc_md5(unsigned char *data, unsigned int len, unsigned char digest[16])
-{
-  MD5_CTX context;
-  MD5Init(&context);
-  MD5Update(&context, data, len);
-  MD5Final(digest, &context);
-}
-
 int isValid(DTCP* dtcp, unsigned char* data) {
   // interact inner_data
   // +1 is for '\0'
