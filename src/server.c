@@ -28,7 +28,7 @@ int main(void)
   listen(server_sockfd, 5);
   while(1)
   {
-    char *ch = (char *)calloc(BUF_SIZE, sizeof(char));
+    unsigned char *ch = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
     printf("server waiting\n");
     printf("%c\n", ch[0]);
 
@@ -36,7 +36,7 @@ int main(void)
                            (struct sockaddr *)&client_address, &client_len);
 
     int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
-    char* res = interpret_DIP_Data(&ch[0]);
+    unsigned char* res = interpret_DIP_Data(&ch[0]);
      
     show_hexdump(ch, 37); 
     write(client_sockfd, &ch[0], BUF_SIZE);

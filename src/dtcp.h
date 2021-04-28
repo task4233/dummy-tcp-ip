@@ -10,10 +10,10 @@ typedef struct
 {
   uint32_t type;
   uint32_t len;
-  char digest[16];
+  unsigned char digest[16];
 } DTCP;
 
-void calc_md5(char *data, unsigned int len, unsigned char digest[16])
+void calc_md5(unsigned char *data, unsigned int len, unsigned char digest[16])
 {
   MD5_CTX context;
   MD5Init(&context);
@@ -21,10 +21,10 @@ void calc_md5(char *data, unsigned int len, unsigned char digest[16])
   MD5Final(digest, &context);
 }
 
-int isValid(DTCP* dtcp, char* data) {
+int isValid(DTCP* dtcp, unsigned char* data) {
   // interact inner_data
   // +1 is for '\0'
-  char *inner_data = (char *)calloc(dtcp->len + 1, sizeof(char));
+  unsigned char *inner_data = (unsigned char *)calloc(dtcp->len + 1, sizeof(unsigned char));
   memcpy(inner_data, data, dtcp->len);
   // printf("RAW: %s\n", inner_data);
 
@@ -39,7 +39,7 @@ int isValid(DTCP* dtcp, char* data) {
   return res;
 }
 
-char *interpret_DTCP_Data(char *data)
+unsigned char* interpret_DTCP_Data(unsigned char *data)
 {
   puts("========================DTCP============================");
   DTCP *dtcp = (DTCP *)calloc(1, sizeof(DTCP));

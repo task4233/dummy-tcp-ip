@@ -10,7 +10,7 @@ typedef struct
   uint32_t len;
 } DUDP;
 
-char *interpret_DUDP_Data(char *data)
+unsigned char* interpret_DUDP_Data(unsigned char* data)
 {
   puts("========================DUDP============================");
   DUDP *dudp = (DUDP*)calloc(1, sizeof(DUDP));

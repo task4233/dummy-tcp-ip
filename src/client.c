@@ -16,7 +16,7 @@ int main(void)
   struct sockaddr_un address ;
   int result;
 
-  char* ch = "\x4\x0\x0\x0\x2\x0\x0\x0\x3\x0\x0\x0\xa\x0\x0\x0\xc\x0\x0\x0\xda\x77\x62\x0e\xbd\xfb\x99\xd6\x65\x4b\x93\xae\x7f\x26\x4f\x67hogefugapiyo\0";
+  unsigned char* ch = "\x4\x0\x0\x0\x2\x0\x0\x0\x3\x0\x0\x0\xa\x0\x0\x0\xc\x0\x0\x0\xda\x77\x62\x0e\xbd\xfb\x99\xd6\x65\x4b\x93\xae\x7f\x26\x4f\x67hogefugapiyo\0";
   show_hexdump(ch, 37); 
 
   sockfd = socket(AF_UNIX,SOCK_STREAM,0);
@@ -34,7 +34,7 @@ int main(void)
   uint size = write(sockfd,&ch[0],BUF_SIZE);
 	printf("[client] write size: %d\n", size);
 
-  char* recvCh = (char*)calloc(BUF_SIZE, sizeof(char));
+  unsigned char* recvCh = (unsigned char*)calloc(BUF_SIZE, sizeof(unsigned char));
 	read(sockfd, &recvCh[0], BUF_SIZE);
 	// printf("char from server = %s \n",recvCh);
   close(sockfd);

@@ -12,7 +12,7 @@ typedef struct
 	uint32_t ttl;
 } DIP;
 
-char *interpret_DIP_Data(char *data)
+unsigned char* interpret_DIP_Data(unsigned char* data)
 {
 	puts("=========================DIP============================");
 	DIP *dip = (DIP *)calloc(1, sizeof(DIP));
