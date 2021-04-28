@@ -28,10 +28,13 @@ DIP* unwrap_DIP_Data(unsigned char* data)
 	memcpy(&dip->ttl, data + 8, 4);
 	printf("ttl    : %0d\n", dip->ttl);
 
+	printf("data   :\n");
+	show_hexdump(&data[12], 38);
+
 	puts("========================================================");
 	switch (dip->type)
 	{
-	case 4:
+	case 6:
 		// tcp
 		unwrap_DTCP_Data(&data[12]);
 		break;

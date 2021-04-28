@@ -30,16 +30,16 @@ int main(void)
   {
     unsigned char *ch = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
     printf("server waiting\n");
-    printf("%c\n", ch[0]);
 
     client_sockfd = accept(server_sockfd,
                            (struct sockaddr *)&client_address, &client_len);
 
-    int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
+    int read_len = read(client_sockfd, &ch[0], 50); 
+    puts("[server]");
     DIP* res = unwrap_DIP_Data(&ch[0]);
-     
-    show_hexdump(ch, 37); 
-    write(client_sockfd, &ch[0], BUF_SIZE);
+    
+    write(client_sockfd, &ch[0], read_len);
+    free(res);
     close(client_sockfd);
   }
 }

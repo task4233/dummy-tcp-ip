@@ -59,8 +59,14 @@ DTCP* unwrap_DTCP_Data(unsigned char *data)
     free(dtcp);
     return (DTCP*)NULL;
   }
-
+  
+  printf("data   :\n");
+	show_hexdump(&data[16], 12);
   puts("========================================================");
+
+  write(1, "RAWDATA: ", 9);
+  write(1, &data[24], dtcp->len);
+  puts("");
 
   return dtcp;
 }
