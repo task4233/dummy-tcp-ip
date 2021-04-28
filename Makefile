@@ -27,3 +27,7 @@ docker-build:
 
 docker-run:
 	docker run --rm -it architecture /bin/sh
+
+.PHONY: clean
+clean:
+	rm -f server_socket test/test
