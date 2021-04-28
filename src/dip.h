@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "dtcp.h"
+#include "dudp.h"
 #include "utils.h"
 
 typedef struct
@@ -26,7 +27,6 @@ char *interpret_DIP_Data(char *data)
 	printf("ttl    : %0d\n", dip->ttl);
 
 	puts("========================================================");
-
 	switch (dip->type)
 	{
 	case 4:
@@ -35,7 +35,7 @@ char *interpret_DIP_Data(char *data)
 		break;
 	case 17:
 		// udp
-		// interpret_DUDP_Data(&data[8]);
+		interpret_DUDP_Data(&data[12]);
 		break;
 	default:
 		fprintf(stderr, "type %d is invalid type\n", dip->type);
