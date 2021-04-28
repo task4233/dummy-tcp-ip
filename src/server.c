@@ -6,6 +6,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 #include <string.h>
+#include "utils.h"
 
 const uint BUF_SIZE = 1024;
 
@@ -16,22 +17,22 @@ typedef struct
   uint32_t ttl;
 } LayerDIP;
 
-char* interpret_DIP_Data(char **data)
+char* interpret_DIP_Data(char *data)
 {
-  printf("data\n: %s", *data);
+  LayerDIP *dip = (LayerDIP*)calloc(1, sizeof(LayerDIP)); 
+  show_hexdump(data);
 
-  LayerDIP *dip = (LayerDIP*)calloc(1, sizeof(LayerDIP));
-  char* buf = (char*)calloc(BUF_SIZE, sizeof(char));
-  memcpy(buf, data, 4);
-  printf("type: %d\n", dip->type);
+  memcpy(&dip->type, data, 4);
+  printf("type: %0X\n", dip->type); 
 
-  memcpy(&dip->version, data+4, 4);
-  printf("version: %d\n", dip->version);
+  memcpy(&dip->version, data+4, 4); 
+  printf("version: %0X\n", dip->version);
 
   memcpy(&dip->ttl, data+8, 4);
-  printf("ttl: %d\n", dip->ttl);
+  printf("ttl: %0X\n", dip->ttl);
 
-  return *data;
+  free(dip);
+  return data;
 }
 
 int main(void)
@@ -58,10 +59,10 @@ int main(void)
     client_sockfd = accept(server_sockfd,
                            (struct sockaddr *)&client_address, &client_len);
 
-    int read_len = read(client_sockfd, &ch[0], sizeof(ch));
-    ch[read_len] = '\0';
-    char* res = interpret_DIP_Data(&ch);
-    printf("[servr] ch: %s\n", ch);
+    int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
+    char* res = interpret_DIP_Data(&ch[0]);
+     
+    show_hexdump(ch); 
     write(client_sockfd, &ch[0], BUF_SIZE);
     close(client_sockfd);
   }
