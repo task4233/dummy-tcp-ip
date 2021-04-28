@@ -39,7 +39,8 @@ int isValid(DTCP* dtcp, unsigned char* data) {
   return res;
 }
 
-unsigned char* interpret_DTCP_Data(unsigned char *data)
+// freeするのを忘れないこと
+DTCP* interpret_DTCP_Data(unsigned char *data)
 {
   puts("========================DTCP============================");
   DTCP *dtcp = (DTCP *)calloc(1, sizeof(DTCP));
@@ -55,10 +56,11 @@ unsigned char* interpret_DTCP_Data(unsigned char *data)
   show_hexdump(dtcp->digest, 16);
   if (!isValid(dtcp, &data[24])) {
     fprintf(stderr, "invalid checksum\n");
+    free(dtcp);
+    return (DTCP*)NULL;
   }
 
   puts("========================================================");
 
-  free(dtcp);
-  return data;
+  return dtcp;
 }

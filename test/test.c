@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "dudp.h"
+#include "dtcp.h"
 
 int main(void)
 {
@@ -11,6 +12,7 @@ int main(void)
 
   suite = CU_add_suite("DUDP Test", NULL, NULL);
   CU_add_test(suite, "interpret_DUDP_Data_Test", interpret_DUDP_Data_Test);
+  CU_add_test(suite, "interpret_DTCP_Data_Test", interpret_DTCP_Data_Test);
 
   CU_console_run_tests();
   CU_cleanup_registry();

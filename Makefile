@@ -17,8 +17,9 @@ run-server: build-server
 run-client: build-client
 	./bin/server
 
-test: test/test.c
-	gcc test/test.c -L/usr/lib -lcunit -o ./test/test
+.PHONY: test
+test:
+	gcc test/test.c ./md5_src/md5c.c -L/usr/lib -lcunit -o ./test/test
 	./test/test
 
 docker-build:
