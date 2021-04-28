@@ -17,8 +17,9 @@ run-server: build-server
 run-client: build-client
 	./bin/server
 
-test:
-	echo "test"
+test: test/test.c
+	gcc test/test.c -L/usr/lib -lcunit -o ./test/test
+	./test/test
 
 docker-build:
 	docker build -t architecture .

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "utils.h"
 
 typedef struct
@@ -10,7 +11,9 @@ typedef struct
   uint32_t len;
 } DUDP;
 
-unsigned char* interpret_DUDP_Data(unsigned char* data)
+// DUDPのデータをパースする関数
+// dudpをfreeすることを忘れない
+DUDP* interpret_DUDP_Data(unsigned char* data)
 {
   puts("========================DUDP============================");
   DUDP *dudp = (DUDP*)calloc(1, sizeof(DUDP));
@@ -22,7 +25,6 @@ unsigned char* interpret_DUDP_Data(unsigned char* data)
   printf("len    : %0d\n", dudp->len);
 
   puts("========================================================");
-
-  free(dudp);
-  return data;
+  return dudp;
 }
+
