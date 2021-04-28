@@ -13,7 +13,7 @@ typedef struct
 
 // DUDPのデータをパースする関数
 // dudpをfreeすることを忘れない
-DUDP* interpret_DUDP_Data(unsigned char* data)
+DUDP* unwrap_DUDP_Data(unsigned char* data)
 {
   puts("========================DUDP============================");
   DUDP *dudp = (DUDP*)calloc(1, sizeof(DUDP));

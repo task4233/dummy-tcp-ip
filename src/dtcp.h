@@ -40,7 +40,7 @@ int isValid(DTCP* dtcp, unsigned char* data) {
 }
 
 // freeするのを忘れないこと
-DTCP* interpret_DTCP_Data(unsigned char *data)
+DTCP* unwrap_DTCP_Data(unsigned char *data)
 {
   puts("========================DTCP============================");
   DTCP *dtcp = (DTCP *)calloc(1, sizeof(DTCP));

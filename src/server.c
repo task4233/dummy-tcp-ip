@@ -36,7 +36,7 @@ int main(void)
                            (struct sockaddr *)&client_address, &client_len);
 
     int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
-    unsigned char* res = interpret_DIP_Data(&ch[0]);
+    unsigned char* res = unwrap_DIP_Data(&ch[0]);
      
     show_hexdump(ch, 37); 
     write(client_sockfd, &ch[0], BUF_SIZE);

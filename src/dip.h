@@ -14,7 +14,7 @@ typedef struct
 } DIP;
 
 // 忘れずにfreeすること
-DIP* interpret_DIP_Data(unsigned char* data)
+DIP* unwrap_DIP_Data(unsigned char* data)
 {
 	puts("=========================DIP============================");
 	DIP *dip = (DIP *)calloc(1, sizeof(DIP));
@@ -33,11 +33,11 @@ DIP* interpret_DIP_Data(unsigned char* data)
 	{
 	case 4:
 		// tcp
-		interpret_DTCP_Data(&data[12]);
+		unwrap_DTCP_Data(&data[12]);
 		break;
 	case 17:
 		// udp
-		interpret_DUDP_Data(&data[12]);
+		unwrap_DUDP_Data(&data[12]);
 		break;
 	default:
 	    // 後々実装されるかもしれないのでエラーのみ出しておく
