@@ -19,7 +19,7 @@ run-client: build-client
 
 .PHONY: test
 test:
-	gcc test/test.c ./md5_src/md5c.c -L/usr/lib -lcunit -o ./test/test
+	gcc test/test.c ./md5_src/md5c.c -L/usr/local/lib -lcunit -o ./test/test
 	./test/test
 
 docker-build:
