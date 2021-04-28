@@ -13,7 +13,8 @@ typedef struct
 	uint32_t ttl;
 } DIP;
 
-unsigned char* interpret_DIP_Data(unsigned char* data)
+// 忘れずにfreeすること
+DIP* interpret_DIP_Data(unsigned char* data)
 {
 	puts("=========================DIP============================");
 	DIP *dip = (DIP *)calloc(1, sizeof(DIP));
@@ -39,11 +40,10 @@ unsigned char* interpret_DIP_Data(unsigned char* data)
 		interpret_DUDP_Data(&data[12]);
 		break;
 	default:
+	    // 後々実装されるかもしれないのでエラーのみ出しておく
 		fprintf(stderr, "type %d is invalid type\n", dip->type);
 		break;
 	}
 
-	free(dip);
-
-	return data;
+	return dip;
 }

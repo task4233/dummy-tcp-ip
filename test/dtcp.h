@@ -1,6 +1,5 @@
 #pragma once
 #include <CUnit/CUnit.h>
-#include <CUnit/Console.h>
 #include <stdlib.h>
 #include "../src/dtcp.h"
 
