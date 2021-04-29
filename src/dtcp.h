@@ -13,7 +13,9 @@ typedef struct
   unsigned char* data; // the pointer to data in next layer
 } DTCP;
 
-int isValid(unsigned char* data, DTCP* dtcp) {
+// if error occurs, return NOT 0
+// if not, return 0
+int isInvalid(unsigned char* data, DTCP* dtcp) {
   // interact inner_data
   // +1 is for '\0'
   unsigned char *inner_data = (unsigned char *)calloc(dtcp->len, sizeof(unsigned char));
@@ -25,7 +27,7 @@ int isValid(unsigned char* data, DTCP* dtcp) {
   printf("actual : ");
   show_hexdump(real_digest, 16);
 
-  int res = strncmp(dtcp->digest, real_digest, 16) == 0;
+  int res = strncmp(dtcp->digest, real_digest, 16);
   free(real_digest);
   free(inner_data);
   return res;
@@ -45,7 +47,7 @@ int unwrap_DTCP_Data(unsigned char *data, DTCP* dtcp)
   memcpy(&dtcp->digest, data + 8, 16);
   printf("digest : ");
   show_hexdump(dtcp->digest, 16);
-  if (!isValid(&data[24], dtcp)) {
+  if (isInvalid(&data[24], dtcp)) {
     fprintf(stderr, "invalid checksum\n");
     return 1;
   }

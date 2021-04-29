@@ -15,7 +15,9 @@ typedef struct
 	unsigned char *data; // the pointer to data in next layer
 } DIP;
 
-void unwrap_DIP_Data(unsigned char *data, DIP* dip)
+// if error occurs, return 1
+// if not, return 0
+int unwrap_DIP_Data(unsigned char *data, DIP* dip)
 {
 	puts("=========================DIP============================");
 	memcpy(&dip->type, data, 4);
@@ -34,7 +36,10 @@ void unwrap_DIP_Data(unsigned char *data, DIP* dip)
 	{
 		// tcp
 		DTCP *dtcp = (DTCP *)malloc(sizeof(DTCP));
-		unwrap_DTCP_Data(&data[12], &dtcp[0]);
+		if (unwrap_DTCP_Data(&data[12], &dtcp[0])) {
+			free(dtcp);
+			return 1;
+		}
 		free(dtcp);
 		break;
 	}
@@ -42,15 +47,19 @@ void unwrap_DIP_Data(unsigned char *data, DIP* dip)
 	{
 		// udp
 		DUDP *dudp = (DUDP *)malloc(sizeof(DUDP));
-		unwrap_DUDP_Data(&data[12], &dudp[0]);
+		if (unwrap_DUDP_Data(&data[12], &dudp[0])) {
+			free(dudp);
+			return 1;
+		}
 		free(dudp);
 		break;
 	}
 	default:
 		// 後々実装されるかもしれないのでエラーのみ出しておく
 		fprintf(stderr, "type %d is invalid type\n", dip->type);
-		break;
+		return 1;
 	}
+	return 0;
 }
 
 void wrap_DIP_Data(DIP *dip, unsigned char *data, unsigned int data_size)

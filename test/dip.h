@@ -9,9 +9,9 @@ void unwrap_DIP_Data_Test(void)
     DIP *got = (DIP *)malloc(sizeof(DIP));
 
     // correct data(tcp)
-    unsigned char *correct_test_data_tcp = "\x4\x0\x0\x0\x2\x0\x0\x0\x3\x0\x0\x0\xa\x0\x0\x0\xc\x0\x0\x0\xda\x77\x62\x0e\xbd\xfb\x99\xd6\x65\x4b\x93\xae\x7f\x26\x4f\x67hogefugapiyo\0";
+    unsigned char *correct_test_data_tcp = "\x6\x0\x0\x0\x2\x0\x0\x0\x3\x0\x0\x0\xa\x0\x0\x0\xc\x0\x0\x0\xda\x77\x62\x0e\xbd\xfb\x99\xd6\x65\x4b\x93\xae\x7f\x26\x4f\x67hogefugapiyo\0";
     res = unwrap_DIP_Data(correct_test_data_tcp, &got[0]);
-    CU_ASSERT_EQUAL(got->type, 4);
+    CU_ASSERT_EQUAL(got->type, 6);
     CU_ASSERT_EQUAL(got->version, 2);
     CU_ASSERT_EQUAL(got->ttl, 3);
     CU_ASSERT_EQUAL(res, 0);
@@ -32,7 +32,7 @@ void unwrap_DIP_Data_Test(void)
     CU_ASSERT_EQUAL(got->type, 1);
     CU_ASSERT_EQUAL(got->version, 2);
     CU_ASSERT_EQUAL(got->ttl, 3);
-    CU_ASSERT_EQUAL(res, 0);
+    CU_ASSERT_EQUAL(res, 1);
     
     free(got);
 }

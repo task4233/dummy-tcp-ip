@@ -11,8 +11,7 @@ typedef struct
   unsigned char *data; // the pointer to data in next layer
 } DUDP;
 
-// DUDPのデータをパースする関数
-void unwrap_DUDP_Data(unsigned char* data, DUDP* dudp)
+int unwrap_DUDP_Data(unsigned char* data, DUDP* dudp)
 {
   puts("========================DUDP============================");
   memcpy(&dudp->type, data, 4);
@@ -24,6 +23,8 @@ void unwrap_DUDP_Data(unsigned char* data, DUDP* dudp)
   write(1, "RAWDATA: ", 9);
   write(1, &data[8], dudp->len);
   puts("========================================================");
+
+  return 0;
 }
 
 void wrap_DUDP_Data(DUDP* dudp, unsigned char* ip_data) {
