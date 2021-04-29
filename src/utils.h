@@ -6,7 +6,7 @@
 
 // show_hexdump show len bytes of given data with hexadecimal format 
 void show_hexdump(const unsigned char* data, const unsigned int len) {
-  // printf("len: %d\n", len);
+   printf("len: %d\n", len);
   for (unsigned int idx=0; idx<len; ++idx) {
     printf("%02X ", data[idx]);
     if (idx % 16 == 15) {

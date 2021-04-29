@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "utils.h"
 
 typedef struct
@@ -9,12 +10,13 @@ typedef struct
   uint32_t type;
   uint32_t len;
   unsigned char digest[16];
+  unsigned char* data; // the pointer to data in next layer
 } DTCP;
 
 int isValid(DTCP* dtcp, unsigned char* data) {
   // interact inner_data
   // +1 is for '\0'
-  unsigned char *inner_data = (unsigned char *)calloc(dtcp->len + 1, sizeof(unsigned char));
+  unsigned char *inner_data = (unsigned char *)calloc(dtcp->len, sizeof(unsigned char));
   memcpy(inner_data, data, dtcp->len);
   // printf("RAW: %s\n", inner_data);
 
@@ -41,6 +43,9 @@ DTCP* unwrap_DTCP_Data(unsigned char *data)
   memcpy(&dtcp->len, data + 4, 4);
   printf("len    : %0d\n", dtcp->len);
 
+  printf("data   :\n");
+	show_hexdump(&data[24], dtcp->len);
+
   memcpy(&dtcp->digest, data + 8, 16);
   printf("digest : ");
   show_hexdump(dtcp->digest, 16);
@@ -49,9 +54,6 @@ DTCP* unwrap_DTCP_Data(unsigned char *data)
     free(dtcp);
     return (DTCP*)NULL;
   }
-  
-  printf("data   :\n");
-	show_hexdump(&data[16], dtcp->len);
   puts("========================================================");
 
   write(1, "RAWDATA: ", 9);
@@ -59,4 +61,11 @@ DTCP* unwrap_DTCP_Data(unsigned char *data)
   puts("");
 
   return dtcp;
+}
+
+void wrap_DTCP_Data(DTCP* dtcp, unsigned char* ip_data) {
+  ip_data[0] = dtcp->type;
+  ip_data[4] = dtcp->len;
+  memcpy(&ip_data[8], &dtcp->digest[0], 16);
+  memcpy(&ip_data[24], &dtcp->data[0], dtcp->len); 
 }

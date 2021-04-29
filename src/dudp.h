@@ -9,6 +9,7 @@ typedef struct
 {
   uint32_t type;
   uint32_t len;
+  unsigned char *data; // the pointer to data in next layer
 } DUDP;
 
 // DUDPのデータをパースする関数
@@ -28,3 +29,8 @@ DUDP* unwrap_DUDP_Data(unsigned char* data)
   return dudp;
 }
 
+void wrap_DUDP_Data(DUDP* dudp, unsigned char* ip_data) {
+  ip_data[0] = dudp->type;
+  ip_data[4] = dudp->len;
+  memcpy(&ip_data[8], &dudp->data[0], dudp->len);
+}
