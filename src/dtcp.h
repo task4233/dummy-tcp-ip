@@ -13,7 +13,7 @@ typedef struct
   unsigned char* data; // the pointer to data in next layer
 } DTCP;
 
-int isValid(DTCP* dtcp, unsigned char* data) {
+int isValid(unsigned char* data, DTCP* dtcp) {
   // interact inner_data
   // +1 is for '\0'
   unsigned char *inner_data = (unsigned char *)calloc(dtcp->len, sizeof(unsigned char));
@@ -31,36 +31,28 @@ int isValid(DTCP* dtcp, unsigned char* data) {
   return res;
 }
 
-// freeするのを忘れないこと
-DTCP* unwrap_DTCP_Data(unsigned char *data)
+void unwrap_DTCP_Data(unsigned char *data, DTCP* dtcp)
 {
   puts("========================DTCP============================");
-  DTCP *dtcp = (DTCP *)calloc(1, sizeof(DTCP));
-
   memcpy(&dtcp->type, data, 4);
   printf("type   : %0d\n", dtcp->type);
 
   memcpy(&dtcp->len, data + 4, 4);
   printf("len    : %0d\n", dtcp->len);
 
-  printf("data   :\n");
-	show_hexdump(&data[24], dtcp->len);
-
   memcpy(&dtcp->digest, data + 8, 16);
   printf("digest : ");
   show_hexdump(dtcp->digest, 16);
-  if (!isValid(dtcp, &data[24])) {
+  if (!isValid(&data[24], dtcp)) {
     fprintf(stderr, "invalid checksum\n");
     free(dtcp);
-    return (DTCP*)NULL;
+    return;
   }
   puts("========================================================");
 
   write(1, "RAWDATA: ", 9);
   write(1, &data[24], dtcp->len);
   puts("");
-
-  return dtcp;
 }
 
 void wrap_DTCP_Data(DTCP* dtcp, unsigned char* ip_data) {

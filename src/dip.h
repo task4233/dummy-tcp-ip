@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+
 #include "dtcp.h"
 #include "dudp.h"
 #include "utils.h"
@@ -14,13 +15,9 @@ typedef struct
 	unsigned char *data; // the pointer to data in next layer
 } DIP;
 
-// 忘れずにfreeすること
-// TODO: 引数で実体を渡すようにする
-DIP *unwrap_DIP_Data(unsigned char *data)
+void unwrap_DIP_Data(unsigned char *data, DIP* dip)
 {
 	puts("=========================DIP============================");
-	DIP *dip = (DIP *)calloc(1, sizeof(DIP));
-
 	memcpy(&dip->type, data, 4);
 	printf("type   : %0d\n", dip->type);
 
@@ -36,14 +33,16 @@ DIP *unwrap_DIP_Data(unsigned char *data)
 	case 6:
 	{
 		// tcp
-		DTCP *dtcp = unwrap_DTCP_Data(&data[12]);
+		DTCP *dtcp = (DTCP *)malloc(sizeof(DTCP));
+		unwrap_DTCP_Data(&data[12], &dtcp[0]);
 		free(dtcp);
 		break;
 	}
 	case 17:
 	{
 		// udp
-		DUDP *dudp = unwrap_DUDP_Data(&data[12]);
+		DUDP *dudp = (DUDP *)malloc(sizeof(DUDP));
+		unwrap_DUDP_Data(&data[12], &dudp[0]);
 		free(dudp);
 		break;
 	}
@@ -52,8 +51,6 @@ DIP *unwrap_DIP_Data(unsigned char *data)
 		fprintf(stderr, "type %d is invalid type\n", dip->type);
 		break;
 	}
-
-	return dip;
 }
 
 void wrap_DIP_Data(DIP *dip, unsigned char *data, unsigned int data_size)

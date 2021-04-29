@@ -36,10 +36,11 @@ int main(void)
 
     int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
     puts("[server]");
-    DIP* res = unwrap_DIP_Data(&ch[0]);
+    DIP* dip = (DIP*)malloc(sizeof(DIP));
+    unwrap_DIP_Data(&ch[0], &dip[0]);
+    free(dip);
     
     write(client_sockfd, &ch[0], read_len);
-    free(res);
     close(client_sockfd);
   }
 }

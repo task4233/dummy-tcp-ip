@@ -13,12 +13,9 @@ typedef struct
 } DUDP;
 
 // DUDPのデータをパースする関数
-// dudpをfreeすることを忘れない
-DUDP* unwrap_DUDP_Data(unsigned char* data)
+void unwrap_DUDP_Data(unsigned char* data, DUDP* dudp)
 {
   puts("========================DUDP============================");
-  DUDP *dudp = (DUDP*)calloc(1, sizeof(DUDP));
-
   memcpy(&dudp->type, data, 4);
   printf("type   : %0d\n", dudp->type);
 
@@ -28,7 +25,6 @@ DUDP* unwrap_DUDP_Data(unsigned char* data)
   write(1, "RAWDATA: ", 9);
   write(1, &data[8], dudp->len);
   puts("========================================================");
-  return dudp;
 }
 
 void wrap_DUDP_Data(DUDP* dudp, unsigned char* ip_data) {
