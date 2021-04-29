@@ -89,3 +89,6 @@ make test
 Enter command: R
 (snip)
 ```
+
+## ライセンス関連
+ - [RSA Data Security, Inc. MD5 Message-Digest Algorithm](https://tools.ietf.org/html/rfc1321)
