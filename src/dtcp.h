@@ -51,7 +51,7 @@ DTCP* unwrap_DTCP_Data(unsigned char *data)
   }
   
   printf("data   :\n");
-	show_hexdump(&data[16], 12);
+	show_hexdump(&data[16], dtcp->len);
   puts("========================================================");
 
   write(1, "RAWDATA: ", 9);

@@ -27,10 +27,7 @@ DIP* unwrap_DIP_Data(unsigned char* data)
 
 	memcpy(&dip->ttl, data + 8, 4);
 	printf("ttl    : %0d\n", dip->ttl);
-
-	printf("data   :\n");
-	show_hexdump(&data[12], 38);
-
+	
 	puts("========================================================");
 	switch (dip->type)
 	{

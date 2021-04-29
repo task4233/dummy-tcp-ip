@@ -34,7 +34,7 @@ int main(void)
     client_sockfd = accept(server_sockfd,
                            (struct sockaddr *)&client_address, &client_len);
 
-    int read_len = read(client_sockfd, &ch[0], 50); 
+    int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
     puts("[server]");
     DIP* res = unwrap_DIP_Data(&ch[0]);
     
