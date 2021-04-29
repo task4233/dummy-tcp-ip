@@ -27,8 +27,9 @@ int unwrap_DUDP_Data(unsigned char* data, DUDP* dudp)
   return 0;
 }
 
-void wrap_DUDP_Data(DUDP* dudp, unsigned char* ip_data) {
+int wrap_DUDP_Data(DUDP* dudp, unsigned char* ip_data) {
   memcpyUint32(&ip_data[0], dudp->type);
   memcpyUint32(&ip_data[4], dudp->len);
   memcpy(&ip_data[8], &dudp->data[0], dudp->len);
+  return 0;
 }

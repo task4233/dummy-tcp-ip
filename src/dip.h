@@ -62,10 +62,11 @@ int unwrap_DIP_Data(unsigned char *data, DIP* dip)
 	return 0;
 }
 
-void wrap_DIP_Data(DIP *dip, unsigned char *data, unsigned int data_size)
+int wrap_DIP_Data(DIP *dip, unsigned char *data, unsigned int data_size)
 {
 	memcpyUint32(&data[0], dip->type);
 	memcpyUint32(&data[4], dip->version);
 	memcpyUint32(&data[8], dip->ttl);
 	memcpy(&data[12], &dip->data[0], data_size);
+	return 0;
 }

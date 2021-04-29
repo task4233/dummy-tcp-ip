@@ -13,7 +13,7 @@
 const unsigned int MAX_BUF_SIZE = 1024;
 
 // read_file reads data in file_name, the data is written in data
-// if failed to open file, return -1
+// if failed to open file, return 0
 // if not, returns read length
 int read_file(char *file_name, unsigned char *data)
 {
@@ -21,7 +21,7 @@ int read_file(char *file_name, unsigned char *data)
   if (fp == NULL)
   {
     fprintf(stderr, "failed to open file: %s\n", file_name);
-    return 1;
+    return 0;
   }
 
   char ch;
@@ -40,8 +40,14 @@ int build_payload(unsigned int protocol, char *file_name, unsigned char *payload
 {
   puts("[BEGIN] build_payload");
 
+  int res;
   unsigned char *raw_data = (unsigned char *)calloc(MAX_BUF_SIZE, sizeof(unsigned char));
-  unsigned int raw_data_size = read_file(&file_name[0], &raw_data[0]);
+  uint raw_data_size = read_file(&file_name[0], &raw_data[0]);
+  if (raw_data_size == 0) {
+    fprintf(stderr, "failed to read file\n");
+    return 1;
+  }
+
   unsigned int ip_data_size = raw_data_size;
 
   unsigned char *ip_data = (unsigned char *)calloc(MAX_BUF_SIZE, sizeof(unsigned char));
@@ -56,8 +62,13 @@ int build_payload(unsigned int protocol, char *file_name, unsigned char *payload
     write(1, &raw_data[0], raw_data_size);
     show_hexdump(&raw_data[0], raw_data_size);
     calc_md5(&raw_data[0], raw_data_size, &dtcp->digest[0]);
-    wrap_DTCP_Data(&dtcp[0], &ip_data[0]);
+    res = wrap_DTCP_Data(&dtcp[0], &ip_data[0]);
     free(dtcp);
+    if (res) {
+      fprintf(stderr, "failed to wrap dtcp data\n");
+        free(raw_data);
+      return 1;
+    }
 
     ip_data_size += 24;
     break;
@@ -68,15 +79,22 @@ int build_payload(unsigned int protocol, char *file_name, unsigned char *payload
     dudp->type = 10;
     dudp->len = raw_data_size;
     dudp->data = &raw_data[0];
-    wrap_DUDP_Data(&dudp[0], &ip_data[0]);
+    res = wrap_DUDP_Data(&dudp[0], &ip_data[0]);
     free(dudp);
+
+    if (res) {
+      fprintf(stderr, "failed to wrap dudp data\n");
+        free(raw_data);
+      return 1;
+    }
 
     ip_data_size += 8;
     break;
   }
   default:
     fprintf(stderr, "invalid protocol: %d\n", protocol);
-    break;
+      free(raw_data);
+      return 1;
   }
   free(raw_data);
 
@@ -86,9 +104,14 @@ int build_payload(unsigned int protocol, char *file_name, unsigned char *payload
   dip->ttl = 0x40;
   dip->type = protocol;
   dip->data = &ip_data[0];
-  wrap_DIP_Data(&dip[0], &payload[0], ip_data_size);
+  res = wrap_DIP_Data(&dip[0], &payload[0], ip_data_size);
   free(dip);
   free(ip_data);
+
+  if (res) {
+    fprintf(stderr, "failed to wrap dip data\n");
+    return 1;
+  }
 
   *len = ip_data_size + 12;
   puts("payload: ");
@@ -168,23 +191,19 @@ int client_call(unsigned int protocol, char *file_name)
   return 0;
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
-  int protocol;
-  char *file_name = (char *)calloc(64, sizeof(char)); // it's enough, i think
-  printf("input protocol(dtcp: 6, dudp: 17) => ");
-  scanf("%d", &protocol);
-  printf("input file name which you want to send => ");
-  scanf("%s", file_name);
-  printf("set: (%d), %s\n", protocol, file_name);
-
-  if (client_call(protocol, &file_name[0]))
-  {
-    fprintf(stderr, "failed to client_call\n");
-    free(file_name);
+  if (argc < 3) {
+    fprintf(stderr, "./client protocol_number file_name");
     return 1;
   }
 
-  free(file_name);
+  int protocol = atoi(argv[1]);
+  char *file_name = argv[2];
+  if (client_call(protocol, &file_name[0]))
+  {
+    fprintf(stderr, "failed to client_call\n");
+    return 1;
+  }
   return 0;
 }
