@@ -31,7 +31,9 @@ int isValid(unsigned char* data, DTCP* dtcp) {
   return res;
 }
 
-void unwrap_DTCP_Data(unsigned char *data, DTCP* dtcp)
+// if error occurs, return 1
+// if not, return 0;
+int unwrap_DTCP_Data(unsigned char *data, DTCP* dtcp)
 {
   puts("========================DTCP============================");
   memcpy(&dtcp->type, data, 4);
@@ -45,14 +47,14 @@ void unwrap_DTCP_Data(unsigned char *data, DTCP* dtcp)
   show_hexdump(dtcp->digest, 16);
   if (!isValid(&data[24], dtcp)) {
     fprintf(stderr, "invalid checksum\n");
-    free(dtcp);
-    return;
+    return 1;
   }
   puts("========================================================");
 
   write(1, "RAWDATA: ", 9);
   write(1, &data[24], dtcp->len);
   puts("");
+  return 0;
 }
 
 void wrap_DTCP_Data(DTCP* dtcp, unsigned char* ip_data) {
