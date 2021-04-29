@@ -9,7 +9,7 @@
 #include "utils.h"
 #include "dip.h"
 
-const unsigned int BUF_SIZE = 1024;
+const unsigned int MAX_BUF_SIZE = 1024;
 
 int main(void)
 {
@@ -28,13 +28,13 @@ int main(void)
   listen(server_sockfd, 5);
   while(1)
   {
-    unsigned char *ch = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
+    unsigned char *ch = (unsigned char *)calloc(MAX_BUF_SIZE, sizeof(unsigned char));
     printf("server waiting\n");
 
     client_sockfd = accept(server_sockfd,
                            (struct sockaddr *)&client_address, &client_len);
 
-    int read_len = read(client_sockfd, &ch[0], BUF_SIZE); 
+    int read_len = read(client_sockfd, &ch[0], MAX_BUF_SIZE); 
     puts("[server]");
     DIP* dip = (DIP*)malloc(sizeof(DIP));
     unwrap_DIP_Data(&ch[0], &dip[0]);

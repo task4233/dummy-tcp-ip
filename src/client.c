@@ -10,7 +10,7 @@
 #include "dudp.h"
 #include "dip.h"
 
-const unsigned int BUF_SIZE = 1024;
+const unsigned int MAX_BUF_SIZE = 1024;
 
 // read_file reads data in file_name, the data is written in data
 // if failed to open file, return -1
@@ -40,11 +40,11 @@ int build_payload(unsigned int protocol, char *file_name, unsigned char *payload
 {
   puts("[BEGIN] build_payload");
 
-  unsigned char *raw_data = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
+  unsigned char *raw_data = (unsigned char *)calloc(MAX_BUF_SIZE, sizeof(unsigned char));
   unsigned int raw_data_size = read_file(&file_name[0], &raw_data[0]);
   unsigned int ip_data_size = raw_data_size;
 
-  unsigned char *ip_data = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
+  unsigned char *ip_data = (unsigned char *)calloc(MAX_BUF_SIZE, sizeof(unsigned char));
   switch (protocol)
   {
   case 6: // DTCP
@@ -125,8 +125,8 @@ int send_payload(unsigned char *payload, unsigned int len)
     return 1;
   }
 
-  unsigned char *recvCh = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
-  unsigned int read_len = read(sockfd, &recvCh[0], BUF_SIZE);
+  unsigned char *recvCh = (unsigned char *)calloc(MAX_BUF_SIZE, sizeof(unsigned char));
+  unsigned int read_len = read(sockfd, &recvCh[0], MAX_BUF_SIZE);
   if (read_len == -1)
   {
     fprintf(stderr, "failed to read response: fd%d", sockfd);
@@ -147,8 +147,8 @@ int client_call(unsigned int protocol, char *file_name)
 {
   puts("[BEGIN] client_call");
   // printf("with: (%d), %s\n", protocol, file_name);
-  unsigned int len = BUF_SIZE;
-  unsigned char *payload = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
+  unsigned int len = MAX_BUF_SIZE;
+  unsigned char *payload = (unsigned char *)calloc(MAX_BUF_SIZE, sizeof(unsigned char));
   if (build_payload(protocol, &file_name[0], &payload[0], &len))
   {
     fprintf(stderr, "failed to build payload\n");

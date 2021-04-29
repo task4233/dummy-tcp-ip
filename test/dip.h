@@ -14,7 +14,7 @@ void unwrap_DIP_Data_Test(void)
     CU_ASSERT_EQUAL(got->type, 6);
     CU_ASSERT_EQUAL(got->version, 2);
     CU_ASSERT_EQUAL(got->ttl, 3);
-    CU_ASSERT_EQUAL(res, 0);
+    CU_ASSERT_EQUAL(res, 0);    
 
     // correct data(udp)
     memset(&got[0], 0, sizeof(DIP));
