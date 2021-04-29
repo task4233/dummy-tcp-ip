@@ -64,8 +64,8 @@ DTCP* unwrap_DTCP_Data(unsigned char *data)
 }
 
 void wrap_DTCP_Data(DTCP* dtcp, unsigned char* ip_data) {
-  ip_data[0] = dtcp->type;
-  ip_data[4] = dtcp->len;
+  memcpyUint32(&ip_data[0], dtcp->type);
+  memcpyUint32(&ip_data[4], dtcp->len);
   memcpy(&ip_data[8], &dtcp->digest[0], 16);
   memcpy(&ip_data[24], &dtcp->data[0], dtcp->len); 
 }

@@ -11,12 +11,12 @@ typedef struct
 	uint32_t type;
 	uint32_t version;
 	uint32_t ttl;
-	unsigned char* data; // the pointer to data in next layer
+	unsigned char *data; // the pointer to data in next layer
 } DIP;
 
 // 忘れずにfreeすること
 // TODO: 引数で実体を渡すようにする
-DIP* unwrap_DIP_Data(unsigned char* data)
+DIP *unwrap_DIP_Data(unsigned char *data)
 {
 	puts("=========================DIP============================");
 	DIP *dip = (DIP *)calloc(1, sizeof(DIP));
@@ -48,7 +48,7 @@ DIP* unwrap_DIP_Data(unsigned char* data)
 		break;
 	}
 	default:
-	    // 後々実装されるかもしれないのでエラーのみ出しておく
+		// 後々実装されるかもしれないのでエラーのみ出しておく
 		fprintf(stderr, "type %d is invalid type\n", dip->type);
 		break;
 	}
@@ -56,9 +56,10 @@ DIP* unwrap_DIP_Data(unsigned char* data)
 	return dip;
 }
 
-void wrap_DIP_Data(DIP *dip, unsigned char* data, unsigned int data_size) {
-	data[0] = dip->type;
-	data[4] = dip->version;
-	data[8] = dip->ttl;
-	memcpy(&data[12],&dip->data[0], data_size);
+void wrap_DIP_Data(DIP *dip, unsigned char *data, unsigned int data_size)
+{
+	memcpyUint32(&data[0], dip->type);
+	memcpyUint32(&data[4], dip->version);
+	memcpyUint32(&data[8], dip->ttl);
+	memcpy(&data[12], &dip->data[0], data_size);
 }

@@ -173,12 +173,9 @@ int main(void)
   int protocol;
   char *file_name = (char *)calloc(64, sizeof(char)); // it's enough, i think
   printf("input protocol(dtcp: 6, dudp: 17) => ");
-  // scanf("%d", &protocol);
+  scanf("%d", &protocol);
   printf("input file name which you want to send => ");
-  // scanf("%s", file_name);
-
-  protocol = 6;
-  strcpy(file_name, "build.sh");
+  scanf("%s", file_name);
   printf("set: (%d), %s\n", protocol, file_name);
 
   if (client_call(protocol, &file_name[0]))

@@ -1,12 +1,13 @@
 #pragma once
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 #include "../md5_src/global.h"
 #include "../md5_src/md5.h"
 
 // show_hexdump show len bytes of given data with hexadecimal format 
 void show_hexdump(const unsigned char* data, const unsigned int len) {
-   printf("len: %d\n", len);
+  // printf("len: %d\n", len);
   for (unsigned int idx=0; idx<len; ++idx) {
     printf("%02X ", data[idx]);
     if (idx % 16 == 15) {
@@ -26,4 +27,11 @@ void calc_md5(unsigned char *data, unsigned int len, unsigned char *digest)
   MD5Init(&context);
   MD5Update(&context, data, len);
   MD5Final(digest, &context);
+}
+
+void memcpyUint32(char* buf, uint32_t val) {
+  buf[0] = val;
+  buf[1] = val >> 8;
+  buf[2] = val >> 16;
+  buf[3] = val >> 24;
 }

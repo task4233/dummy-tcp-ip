@@ -25,12 +25,14 @@ DUDP* unwrap_DUDP_Data(unsigned char* data)
   memcpy(&dudp->len, data + 4, 4);
   printf("len    : %0d\n", dudp->len);
 
+  write(1, "RAWDATA: ", 9);
+  write(1, &data[8], dudp->len);
   puts("========================================================");
   return dudp;
 }
 
 void wrap_DUDP_Data(DUDP* dudp, unsigned char* ip_data) {
-  ip_data[0] = dudp->type;
-  ip_data[4] = dudp->len;
+  memcpyUint32(&ip_data[0], dudp->type);
+  memcpyUint32(&ip_data[4], dudp->len);
   memcpy(&ip_data[8], &dudp->data[0], dudp->len);
 }
