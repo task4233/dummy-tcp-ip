@@ -9,7 +9,7 @@
 #include "utils.h"
 #include "dip.h"
 
-const uint BUF_SIZE = 1024;
+const unsigned int BUF_SIZE = 1024;
 
 int main(void)
 {

@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "utils.h"
-#include "../md5_src/global.h"
-#include "../md5_src/md5.h"
 
 typedef struct
 {

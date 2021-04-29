@@ -1,9 +1,11 @@
 #pragma once
 #include <stdio.h>
 #include <string.h>
+#include "../md5_src/global.h"
+#include "../md5_src/md5.h"
 
 void show_hexdump(const unsigned char* data, const unsigned int len) {
-  for (uint idx=0; idx<len; ++idx) {
+  for (unsigned int idx=0; idx<len; ++idx) {
     printf("%02X ", data[idx]);
     if (idx % 16 == 15) {
       puts("");

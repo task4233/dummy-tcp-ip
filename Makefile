@@ -5,7 +5,7 @@ build-server:
 
 .PHONY: build-client
 build-client:
-	gcc -o ./bin/client ./src/client.c
+	gcc -o ./bin/client ./src/client.c ./md5_src/md5c.c
 
 build:
 	make build-server

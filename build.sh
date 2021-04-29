@@ -1,7 +1,6 @@
 #!/bin/sh
 
-gcc -o ./bin/server ./src/server.c ./md5_src/md5c.c
-gcc -o ./bin/client ./src/client.c
+make build
 
 kill -9 $(ps a | grep ./bin/server | awk '{print $1}' | head -1)
 

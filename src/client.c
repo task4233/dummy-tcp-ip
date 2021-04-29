@@ -7,11 +7,11 @@
 #include <string.h>
 #include "utils.h"
 
-const uint BUF_SIZE = 1024;
+const unsigned int BUF_SIZE = 1024;
 
 // build_payload builds payload
 // if error occurs, return 1
-int build_payload(uint protocol, char *file_name, char *payload, uint *len)
+int build_payload(unsigned int protocol, char *file_name, char *payload, unsigned int *len)
 {
   FILE *fp = fopen(file_name, "r");
   if (fp == NULL)
@@ -21,7 +21,7 @@ int build_payload(uint protocol, char *file_name, char *payload, uint *len)
   }
 
   // ip(12) + (tcp(24) | udp(8))
-  uint base_idx = 12 + (protocol == 6 ? 24 : 8);
+  unsigned int base_idx = 12 + (protocol == 6 ? 24 : 8);
   *len = base_idx;
 
   // write data
@@ -33,40 +33,40 @@ int build_payload(uint protocol, char *file_name, char *payload, uint *len)
   fclose(fp);
 
   // write digest in case of TCP
-  if (payload == 6)
+  if (protocol == 6)
   {
-    calc_md5(&payload[base_idx], *len - base_idx, &payload[12])
+    calc_md5(&payload[base_idx], *len - base_idx, &payload[12]);
   }
 
   // set ip & tcp/udp information
-  &payload[12] = 10;
-  &payload[0] = protocol;
-  &payload[4] = 1;
-  &payload[8] = 0x40;
+  payload[12] = 10;
+  payload[0] = protocol;
+  payload[4] = 1;
+  payload[8] = 0x40;
 
-  show_hexdump(ch, *len);
+  show_hexdump(&payload[0], *len);
   return 0;
 }
 
 // send_payload sends payload to server
 // if error occurs, return 1
-int send_payload(unsigned char *payload, uint len)
+int send_payload(unsigned char *payload, unsigned int len)
 {
   int res;
-  uint sockfd = socket(AF_UNIX, SOCK_STREAM, 0);
+  unsigned int sockfd = socket(AF_UNIX, SOCK_STREAM, 0);
   struct sockaddr_un addr;
   addr.sun_family = AF_UNIX;
   strcpy(addr.sun_path, "server_socket");
-  uint len = sizeof(addr);
+  unsigned int addr_len = sizeof(addr);
 
-  if (connect(sockfd, (struct sockaddr *)&addr, len) == -1)
+  if (connect(sockfd, (struct sockaddr *)&addr, addr_len) == -1)
   {
     fprintf(stderr, "failed to connect: fd%d\n", sockfd);
     close(sockfd);
     return 1;
   }
 
-  if (write(sockfd, &ch[0], len) == -1)
+  if (write(sockfd, &payload[0], len) == -1)
   {
     fprintf(stderr, "failed to write: fd%d\n", sockfd);
     close(sockfd);
@@ -74,7 +74,7 @@ int send_payload(unsigned char *payload, uint len)
   }
 
   unsigned char *recvCh = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
-  uint read_len = read(sockfd, &recvCh[0], BUF_SIZE);
+  unsigned int read_len = read(sockfd, &recvCh[0], BUF_SIZE);
   if (read_len == -1) {
     fprintf(stderr, "failed to read response: fd%d", sockfd);
     close(sockfd);
@@ -89,9 +89,9 @@ int send_payload(unsigned char *payload, uint len)
 
 // client_call do client call
 // if error occurs, return 1
-int client_call(uint protocol, char *file_name)
+int client_call(unsigned int protocol, char *file_name)
 {
-  uint len;
+  unsigned int len;
   unsigned char *payload = (unsigned char *)calloc(BUF_SIZE, sizeof(unsigned char));
   if (build_payload(protocol, &file_name[0], &payload[0], &len))
   {
@@ -100,7 +100,7 @@ int client_call(uint protocol, char *file_name)
     return 1;
   }
 
-  if (send_paylod(&payload[0], len))
+  if (send_payload(&payload[0], len))
   {
     fprintf(stderr, "failed to send payload\n");
     free(payload);
